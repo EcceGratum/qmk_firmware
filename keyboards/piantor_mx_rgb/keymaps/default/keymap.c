@@ -103,7 +103,6 @@ bool rgb_matrix_indicators_user(void)
 {
     //rgb_matrix_set_color(index, red, green, blue);
 	// solid color ?
-	/*
     if(rgb_matrix_get_mode() == 1) 
 	{		
 		switch (get_highest_layer(layer_state))
@@ -130,12 +129,13 @@ bool rgb_matrix_indicators_user(void)
 			break;
 		}
 	}
-	*/
 	
+	/*
 	for(int i = 0; i < RGB_MATRIX_LED_COUNT;i++)
 	{
 		rgb_matrix_set_color(i, rand()%255, rand()%255, rand()%255);
 	}
+	*/
 	return false;
 }
 

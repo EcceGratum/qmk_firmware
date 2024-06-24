@@ -12,7 +12,6 @@
         "nkro": true,
 		"oled": true,
 		"rgb_matrix": true,
-		"lto": true,
     },
 	"build": {
         "lto": true
