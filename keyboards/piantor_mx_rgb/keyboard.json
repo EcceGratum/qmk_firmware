@@ -91,6 +91,7 @@
     "processor": "RP2040",
 	"ws2812": {
 		"driver":  "vendor"
+		"rgbw": false
 	},
 	"rgb_matrix": {
         "driver": "ws2812",

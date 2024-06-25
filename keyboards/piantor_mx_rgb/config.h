@@ -31,9 +31,10 @@
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_OLED_ENABLE
 
-#define WS2812_RGBW
 #define SERIAL_USART_DRIVER SD0
 #define SERIAL_USART_FULL_DUPLEX
+#define RGBLIGHT_DEFAULT_ON true // Enable RGB lighting by default
+#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT // Set default mode to static light
 #ifdef RIGHT_PART
 // RX & TX from 3.5mm jack is not swapped so swap on firmware
 //	#define SERIAL_USART_TX_PIN GP12
