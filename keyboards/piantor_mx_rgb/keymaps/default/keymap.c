@@ -19,62 +19,117 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum layer_names
 {
+    // :::: Layers ::::	
     _QWERTY,
-    _RAISE,
-    _LOWER,
+	_EXT,
+    _SYMBOL,
+    _NUM,
     _ADJUST,
+	
+    // :::: Custom keycodes ::::
+    C_UPDIR = 5,
 };
 
-const unsigned int LOWER = MO(_LOWER);
-const unsigned int RAISE = MO(_RAISE);
-const unsigned int ADJUST = LT(3, KC_SPC);
+// :::: Macros ::::
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+
+    // Macro for ../ in the Symbols layer
+    case C_UPDIR:
+        if (record->event.pressed) {
+            // When key is pressed
+            SEND_STRING("../");
+        } else {
+            // When key is released
+        }
+        break;
+    }
+
+    return true;
+};
+
+const unsigned int EXT = MO(_EXT);
+const unsigned int SYMBOL = MO(_SYMBOL);
+const unsigned int NUM = MO(_NUM);
+const unsigned int ADJUST = MO(_ADJUST);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   
     [_QWERTY] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+       KC_TAB,    KC_A,    KC_Z,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_Q,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_M, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
+      KC_LCTL,    KC_W,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N, KC_SLSH, KC_COMM,  KC_DOT, KC_QUOT,  KC_ESC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   RAISE,  ADJUST,     KC_ENT,   LOWER, KC_RALT
-                                      //`--------------------------'  `--------------------------'
-
-  ),
-	
-    [_RAISE] = LAYOUT_split_3x6_3(
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                        KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-         KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,                         KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,  KC_EQL,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_CIRC,                      KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   RAISE,  ADJUST,     KC_ENT,   LOWER, KC_RALT
+                                              EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
                                       //`--------------------------'  `--------------------------'
   ),
   
-    [_LOWER] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, KC_LABK, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC,       XXXXXXX, KC_KP_7, KC_KP_8, KC_KP_9,KC_KP_PLUS,KC_KP_MINUS,
+    [_EXT] = LAYOUT_split_3x6_3(
+    /*  :::: EXTEND LAYER ::::
+        ╭───┬───┬───┬───┬───╮    ╭───┬───┬───┬───┬───╮
+        |esc|prv|*f |nxt|ins|   |pup|*- | < |*+ |cap|
+        ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
+        |alt|sup|shf|ctr|agr|   |pdw| < | v | > |del|
+        ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
+        |*z |*x |*c |*v |tab|   |ent|bkp|   |mnu|prt|
+        ╰───┴───┴───┴───┴───╯    ╰───┴───┴───┴───┴───╯
+    */
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, KC_LEFT,   KC_UP, KC_RABK, KC_LPRN, KC_RPRN,                      XXXXXXX, KC_KP_4, KC_KP_5, KC_KP_6,KC_KP_ASTERISK,KC_KP_SLASH,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,                      KC_KP_0, KC_KP_1, KC_KP_2, KC_KP_3,KC_EQUAL, XXXXXXX,
+	  XXXXXXX, KC_ESC, LALT(KC_LEFT), LCTL(KC_F), LALT(KC_RGHT), KC_INS,         KC_PGUP, KC_HOME,   KC_UP,  KC_END, KC_CAPS, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|		
+      XXXXXXX, OSM(MOD_LALT), OSM(MOD_LGUI), OSM(MOD_LSFT), OSM(MOD_LCTL), OSM(MOD_RALT), KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|		
+      XXXXXXX, LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), KC_LGUI,           KC_ENT, KC_BSPC,  KC_TAB,  KC_APP, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   RAISE,  ADJUST,     KC_ENT,   LOWER, KC_RALT
+                                              EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
+                                      //`--------------------------'  `--------------------------'
+  ),
+  
+    [_SYMBOL] = LAYOUT_split_3x6_3(
+    /*  :::: SYMBOLS LAYER ::::
+        ╭───┬───┬───┬───┬───╮   ╭───┬───┬───┬───┬───╮
+        | $ | { | } | * | ^ |   | % | @ | < | > |../|
+        ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
+        | / | ( | ) | _ | & |   | # | = | _ | : | ! |
+        ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
+        | ~ | [ | ] | ; | | |   | ` | " | + | \ | ? |
+        ╰───┴───┴───┴───┴───╯   ╰───┴───┴───┴───┴───╯
+    */
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX,  KC_DLR, KC_LCBR, KC_RCBR, KC_ASTR, KC_CIRC,                      KC_PERC,   KC_AT,   KC_LT,   KC_GT, C_UPDIR, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, KC_SLSH, KC_LPRN, KC_RPRN, KC_UNDS, KC_AMPR,                      KC_HASH,  KC_EQL, KC_MINS, KC_COLN, KC_EXLM, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, KC_TILD, KC_LBRC, KC_RBRC, KC_SCLN, KC_PIPE,                       KC_GRV, KC_DQUO, KC_PLUS, KC_BSLS, KC_QUES, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                              EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
+                                      //`--------------------------'  `--------------------------'
+  ),
+  
+    [_NUM] = LAYOUT_split_3x6_3(
+    /*  :::: NUM LAYER ::::
+        ╭───┬───┬───┬───┬───╮   ╭───┬───┬───┬───┬───╮
+        | , | 1 | 2 | 3 |   |  |   |F1 |F2 |F3 |F10|
+        ├───┼───┼───┼───┼───┤  ├───┼───┼───┼───┼───┤
+        | 0 | 4 | 5 | 6 |   |  |   |F4 |F5 |F6 |F11|
+        ├───┼───┼───┼───┼───┤  ├───┼───┼───┼───┼───┤
+        | . | 7 | 8 | 9 |   |  |   |F7 |F8 |F9 |F12|
+        ╰───┴───┴───┴───┴───╯   ╰───┴───┴───┴───┴───╯
+    */
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10, XXXXXXX,                      KC_COMM, KC_KP_1, KC_KP_2, KC_KP_3,KC_KP_PLUS,KC_KP_MINUS,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT,   KC_F4,   KC_F5,   KC_F6,  KC_F11, XXXXXXX,                      KC_KP_0, KC_KP_4, KC_KP_5, KC_KP_6,KC_KP_ASTERISK,KC_KP_SLASH,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LCTL,   KC_F7,   KC_F8,   KC_F9,  KC_F12, XXXXXXX,                       KC_DOT, KC_KP_7, KC_KP_8, KC_KP_9,KC_EQUAL, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                              EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
                                       //`--------------------------'  `--------------------------'
   ),
 
-/*
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,  KC_GRV,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, KC_TILD,
-*/
     [_ADJUST] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,  QK_RBT,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -83,10 +138,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      RGB_RMOD, RGB_M_P, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   LOWER,  ADJUST,     KC_ENT,   RAISE, KC_RALT
+                                              EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
                                       //`--------------------------'  `--------------------------'
   )
 };
+
+/*
+#define RGB_COMBINATION_KEYS 	0, 255, 127
+#define RGB_ALPHAMOD_KEYS 		19, 19, 70
+#define RGB_NONALPHA_KEYS 		255, 40, 0
+#define RGB_ARROW_KEYS 			255, 215, 0
+#define RGB_FUNCTION_KEYS 		255, 14, 93
+#define RGB_PROGRAMMING_KEYS 	55, 107, 47
+#define RGB_NUMBER_KEYS 		0, 0, 255
+#define RGB_UNKNOWN_KEYS 		0, 191, 255
+*/
+#define RGB_COMBINATION_KEYS 	RGB_GREEN
+#define RGB_ALPHAMOD_KEYS 		RGB_RED
+#define RGB_NONALPHA_KEYS 		RGB_YELLOW
+#define RGB_ARROW_KEYS 			RGB_PURPLE
+#define RGB_FUNCTION_KEYS 		RGB_PINK
+#define RGB_PROGRAMMING_KEYS 	RGB_MAGENTA
+#define RGB_NUMBER_KEYS 		RGB_BLUE
+#define RGB_MATH_KEYS 			RGB_CHARTREUSE
+#define RGB_ANYTHINGELSE_KEYS   RGB_TEAL
 
 bool rgb_matrix_indicators_kb(void) {
     // Defer to the keymap if they want to override
@@ -106,68 +181,72 @@ bool rgb_matrix_indicators_kb(void) {
 				 && index != NO_LED) {
 				    const uint16_t keycode = keymap_key_to_keycode(layer, (keypos_t){col,row});
 
-enum keys_group
-{
-	_ARROW_KEYS, 		// purple
-	_NUMERIC_KEYS,		// light green
-	_FUNCTION_KEYS,		// pink
-	_SYSTEM_KEYS,		// yellow
-	_COMBINATION_KEYS,  // orange
-	_ALPHA_KEYS			// light blue
-};
-
 					switch(keycode)
 					{
 						case KC_LSFT:	case KC_RSFT:
 						case KC_LCTL:	case KC_RCTL:
 						case KC_LALT:	case KC_RALT:						
-							rgb_matrix_set_color(index, RGB_GREEN);
+							rgb_matrix_set_color(index, RGB_COMBINATION_KEYS);
 							break;
 						
-						case KC_ENT:
-						case KC_BSPC:
-						case KC_TAB:
+						case KC_ENT: case KC_BSPC: case KC_SPC: case KC_TAB:						
 						case KC_ESC:
-							rgb_matrix_set_color(index, RGB_YELLOW);
+							rgb_matrix_set_color(index, RGB_ALPHAMOD_KEYS);
 							break;	
+						
+						case KC_COMM: case KC_DOT: case KC_QUOT:
+							rgb_matrix_set_color(index, RGB_NONALPHA_KEYS);
+							break;	
+
+						case KC_LEFT:	case KC_RIGHT:		case KC_UP:		case KC_DOWN:	
+							rgb_matrix_set_color(index, RGB_ARROW_KEYS);
+							break;
 
 						case KC_F1:		case KC_F2:		case KC_F3:
 						case KC_F4:		case KC_F5:		case KC_F6:
 						case KC_F7:		case KC_F8: 	case KC_F9:	
 						case KC_F10:	case KC_F11: 	case KC_F12:							
-							rgb_matrix_set_color(index, RGB_PINK);
-							break;			
-						
+							rgb_matrix_set_color(index, RGB_FUNCTION_KEYS);
+							break;								
+
+						case KC_LCBR:	case KC_RCBR:						// {}							
+						case KC_LPRN:	case KC_RPRN:						// ()							
+						case KC_LBRC:	case KC_RBRC:						// ()							
+						case KC_LT:		case KC_GT:							// <>	
+						case KC_SLSH:	case KC_BSLS:	case KC_KP_SLASH:	//					
+							rgb_matrix_set_color(index, RGB_PROGRAMMING_KEYS);
+							break;	
+
+						case KC_CIRC:	case KC_AMPR:	case KC_PIPE:			// ^&|
+						case KC_KP_PLUS:case KC_KP_MINUS: case KC_KP_ASTERISK:	// + - *
+						case KC_EQUAL:											// =						
+							rgb_matrix_set_color(index, RGB_MATH_KEYS);
+							break;	
 						//case KC_1:	case KC_2:	case KC_3:
 						//case KC_4:	case KC_5:	case KC_6:
 						//case KC_7:	case KC_8: 	case KC_9:	
 						//case KC_0:							
-						case KC_EXLM:	case KC_AT: 	case KC_HASH:
-						case KC_DLR:	case KC_PERC: 	case KC_CIRC:
-						case KC_AMPR:	case KC_ASTR: 	case KC_LPRN:
-						case KC_RPRN:
+						//case KC_EXLM:	case KC_AT: 	case KC_HASH:
+						//case KC_DLR:	case KC_PERC: 	case KC_CIRC:
+						//case KC_AMPR:	case KC_ASTR: 	case KC_LPRN:
+						//case KC_RPRN:
 						case KC_KP_1:	case KC_KP_2:	case KC_KP_3:
 						case KC_KP_4:	case KC_KP_5:	case KC_KP_6:
 						case KC_KP_7:	case KC_KP_8:	case KC_KP_9:
 						case KC_KP_0:
-							rgb_matrix_set_color(index, RGB_ORANGE);
+							rgb_matrix_set_color(index, RGB_NUMBER_KEYS);
 							break;	
 
-						case KC_LEFT:	case KC_RIGHT:							
-						case KC_UP:		case KC_DOWN:	
-							rgb_matrix_set_color(index, RGB_PURPLE);
-							break;							
-						
 						case XXXXXXX:
 							rgb_matrix_set_color(index, RGB_BLACK);
 							break;
 							
-						case RAISE:		case LOWER:
+						case SYMBOL: case NUM: case EXT: case ADJUST:
 							rgb_matrix_set_color(index, RGB_WHITE);
 							break;
 						
 						default:
-							rgb_matrix_set_color(index, RGB_TEAL);
+							rgb_matrix_set_color(index, RGB_ANYTHINGELSE_KEYS);
 					}
                 }
             }
@@ -179,7 +258,7 @@ enum keys_group
 			//rgb_matrix_sethsv(HSV_BLUE);
 			//rgb_matrix_set_color_all(RGB_BLUE);
 			break;
-		case _LOWER:
+		case _NUM:
 			//rgb_matrix_sethsv(HSV_RED);	
 			//rgb_matrix_set_color_all(RGB_RED);
 			break;
@@ -428,11 +507,12 @@ void bb_draw_frame(void)
 	bb_clear();
 	
 	const uint8_t current_layer = get_highest_layer(layer_state);
-	bb_draw_radio_button(2, 5 + 6 * 0, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 1);
-	bb_draw_radio_button(2, 5 + 6 * 1, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 0);
-	bb_draw_radio_button(2, 5 + 6 * 2, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 2);
-	bb_draw_radio_button(2, 5 + 6 * 3, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 3);
-	
+	bb_draw_radio_button(2, 2 + 6 * 0, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 0);
+	bb_draw_radio_button(2, 2 + 6 * 1, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 1);
+	bb_draw_radio_button(2, 2 + 6 * 2, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 2);
+	bb_draw_radio_button(2, 2 + 6 * 3, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 3);
+	bb_draw_radio_button(2, 2 + 6 * 4, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 4);
+		
 	if(current_layer == _ADJUST)
 	{
 		// RGB layer
