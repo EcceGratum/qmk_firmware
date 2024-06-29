@@ -74,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
         |alt|sup|shf|ctr|agr|   |pdw| < | v | > |del|
         ├───┼───┼───┼───┼───┤   ├───┼───┼───┼───┼───┤
-        |*z |*x |*c |*v |tab|   |ent|bkp|   |mnu|prt|
+        |*z |*x |*c |*v |*y |   |ent|bkp|   |mnu|prt|
         ╰───┴───┴───┴───┴───╯    ╰───┴───┴───┴───┴───╯
     */
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|		
       XXXXXXX, OSM(MOD_LALT), OSM(MOD_LGUI), OSM(MOD_LSFT), OSM(MOD_LCTL), OSM(MOD_RALT), KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|		
-      XXXXXXX, LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), KC_LGUI,           KC_ENT, KC_BSPC,  KC_TAB,  KC_APP, KC_PSCR, XXXXXXX,
+      XXXXXXX, LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), LCTL(KC_Y),        KC_ENT, KC_BSPC,  KC_TAB,  KC_APP, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                               EXT,  SYMBOL,  KC_SPC,     KC_ENT,     NUM,  ADJUST
                                       //`--------------------------'  `--------------------------'
@@ -162,6 +162,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define RGB_NUMBER_KEYS 		RGB_BLUE
 #define RGB_MATH_KEYS 			RGB_CHARTREUSE
 #define RGB_ANYTHINGELSE_KEYS   RGB_TEAL
+#define RGB_CUTCOPYPASTE_KEYS	RGB_CORAL
+#define RGB_UNDOREDO_KEYS		RGB_GOLDENROD
 
 bool rgb_matrix_indicators_kb(void) {
     // Defer to the keymap if they want to override
@@ -185,7 +187,8 @@ bool rgb_matrix_indicators_kb(void) {
 					{
 						case KC_LSFT:	case KC_RSFT:
 						case KC_LCTL:	case KC_RCTL:
-						case KC_LALT:	case KC_RALT:						
+						case KC_LALT:	case KC_RALT:
+						case OSM(MOD_LALT): case OSM(MOD_LGUI): case OSM(MOD_LSFT): case OSM(MOD_LCTL): case OSM(MOD_RALT):						
 							rgb_matrix_set_color(index, RGB_COMBINATION_KEYS);
 							break;
 						
@@ -235,8 +238,16 @@ bool rgb_matrix_indicators_kb(void) {
 						case KC_KP_7:	case KC_KP_8:	case KC_KP_9:
 						case KC_KP_0:
 							rgb_matrix_set_color(index, RGB_NUMBER_KEYS);
-							break;	
+							break;
 
+						case LCTL(KC_X): case LCTL(KC_C): case LCTL(KC_V):
+							rgb_matrix_set_color(index, RGB_CUTCOPYPASTE_KEYS);
+							break;
+							
+						case LCTL(KC_Z): case LCTL(KC_Y):
+							rgb_matrix_set_color(index, RGB_UNDOREDO_KEYS);
+							break;
+							
 						case XXXXXXX:
 							rgb_matrix_set_color(index, RGB_BLACK);
 							break;
