@@ -31,10 +31,13 @@
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_OLED_ENABLE
 
-#define SERIAL_USART_DRIVER SD0
-#define SERIAL_USART_FULL_DUPLEX
 #define RGBLIGHT_DEFAULT_ON true // Enable RGB lighting by default
 #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT // Set default mode to static light
+#define RGB_MATRIX_TIMEOUT 300000 // number of milliseconds to wait until rgb automatically turns off
+#define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
+
+#define SERIAL_USART_DRIVER SD0
+#define SERIAL_USART_FULL_DUPLEX
 #ifdef RIGHT_PART
 // RX & TX from 3.5mm jack is not swapped so swap on firmware
 //	#define SERIAL_USART_TX_PIN GP12
@@ -76,4 +79,5 @@
 #define OLED_TIMEOUT 60000
 #define OLED_FADE_OUT
 #define OLED_FADE_OUT_INTERVAL 15
+#define OLED_UPDATE_INTERVAL 50
 #endif

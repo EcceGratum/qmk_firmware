@@ -29,7 +29,7 @@ enum layer_names
     // :::: Custom keycodes ::::
     C_UPDIR = 5,
 };
-
+/*
 // :::: Macros ::::
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -47,7 +47,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return true;
 };
-
+*/
 const unsigned int EXT = MO(_EXT);
 const unsigned int SYMBOL = MO(_SYMBOL);
 const unsigned int NUM = MO(_NUM);
@@ -143,16 +143,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-/*
-#define RGB_COMBINATION_KEYS 	0, 255, 127
-#define RGB_ALPHAMOD_KEYS 		19, 19, 70
-#define RGB_NONALPHA_KEYS 		255, 40, 0
-#define RGB_ARROW_KEYS 			255, 215, 0
-#define RGB_FUNCTION_KEYS 		255, 14, 93
-#define RGB_PROGRAMMING_KEYS 	55, 107, 47
-#define RGB_NUMBER_KEYS 		0, 0, 255
-#define RGB_UNKNOWN_KEYS 		0, 191, 255
-*/
 #define RGB_COMBINATION_KEYS 	RGB_GREEN
 #define RGB_ALPHAMOD_KEYS 		RGB_RED
 #define RGB_NONALPHA_KEYS 		RGB_YELLOW
@@ -165,129 +155,113 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define RGB_CUTCOPYPASTE_KEYS	RGB_CORAL
 #define RGB_UNDOREDO_KEYS		RGB_GOLDENROD
 
-bool rgb_matrix_indicators_kb(void) {
+bool rgb_matrix_indicators_kb(void)
+{
     // Defer to the keymap if they want to override
-    if (!rgb_matrix_indicators_user()) { return false; }
+    if (!rgb_matrix_indicators_user()) 
+	{ 
+		return false; 
+	}
 
-	// solid color ?
-    if(rgb_matrix_get_mode() == 1) 
 	{	
-		const uint8_t layer = get_highest_layer(layer_state);
-
-		for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
-            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
-                uint8_t index = g_led_config.matrix_co[row][col];
-
-                if (index >= 0 
-				 && index < RGB_MATRIX_LED_COUNT 
-				 && index != NO_LED) {
-				    const uint16_t keycode = keymap_key_to_keycode(layer, (keypos_t){col,row});
-
-					switch(keycode)
-					{
-						case KC_LSFT:	case KC_RSFT:
-						case KC_LCTL:	case KC_RCTL:
-						case KC_LALT:	case KC_RALT:
-						case OSM(MOD_LALT): case OSM(MOD_LGUI): case OSM(MOD_LSFT): case OSM(MOD_LCTL): case OSM(MOD_RALT):						
-							rgb_matrix_set_color(index, RGB_COMBINATION_KEYS);
-							break;
-						
-						case KC_ENT: case KC_BSPC: case KC_SPC: case KC_TAB:						
-						case KC_ESC:
-							rgb_matrix_set_color(index, RGB_ALPHAMOD_KEYS);
-							break;	
-						
-						case KC_COMM: case KC_DOT: case KC_QUOT:
-							rgb_matrix_set_color(index, RGB_NONALPHA_KEYS);
-							break;	
-
-						case KC_LEFT:	case KC_RIGHT:		case KC_UP:		case KC_DOWN:	
-							rgb_matrix_set_color(index, RGB_ARROW_KEYS);
-							break;
-
-						case KC_F1:		case KC_F2:		case KC_F3:
-						case KC_F4:		case KC_F5:		case KC_F6:
-						case KC_F7:		case KC_F8: 	case KC_F9:	
-						case KC_F10:	case KC_F11: 	case KC_F12:							
-							rgb_matrix_set_color(index, RGB_FUNCTION_KEYS);
-							break;								
-
-						case KC_LCBR:	case KC_RCBR:						// {}							
-						case KC_LPRN:	case KC_RPRN:						// ()							
-						case KC_LBRC:	case KC_RBRC:						// ()							
-						case KC_LT:		case KC_GT:							// <>	
-						case KC_SLSH:	case KC_BSLS:	case KC_KP_SLASH:	//					
-							rgb_matrix_set_color(index, RGB_PROGRAMMING_KEYS);
-							break;	
-
-						case KC_CIRC:	case KC_AMPR:	case KC_PIPE:			// ^&|
-						case KC_KP_PLUS:case KC_KP_MINUS: case KC_KP_ASTERISK:	// + - *
-						case KC_EQUAL:											// =						
-							rgb_matrix_set_color(index, RGB_MATH_KEYS);
-							break;	
-						//case KC_1:	case KC_2:	case KC_3:
-						//case KC_4:	case KC_5:	case KC_6:
-						//case KC_7:	case KC_8: 	case KC_9:	
-						//case KC_0:							
-						//case KC_EXLM:	case KC_AT: 	case KC_HASH:
-						//case KC_DLR:	case KC_PERC: 	case KC_CIRC:
-						//case KC_AMPR:	case KC_ASTR: 	case KC_LPRN:
-						//case KC_RPRN:
-						case KC_KP_1:	case KC_KP_2:	case KC_KP_3:
-						case KC_KP_4:	case KC_KP_5:	case KC_KP_6:
-						case KC_KP_7:	case KC_KP_8:	case KC_KP_9:
-						case KC_KP_0:
-							rgb_matrix_set_color(index, RGB_NUMBER_KEYS);
-							break;
-
-						case LCTL(KC_X): case LCTL(KC_C): case LCTL(KC_V):
-							rgb_matrix_set_color(index, RGB_CUTCOPYPASTE_KEYS);
-							break;
-							
-						case LCTL(KC_Z): case LCTL(KC_Y):
-							rgb_matrix_set_color(index, RGB_UNDOREDO_KEYS);
-							break;
-							
-						case XXXXXXX:
-							rgb_matrix_set_color(index, RGB_BLACK);
-							break;
-							
-						case SYMBOL: case NUM: case EXT: case ADJUST:
-							rgb_matrix_set_color(index, RGB_WHITE);
-							break;
-						
-						default:
-							rgb_matrix_set_color(index, RGB_ANYTHINGELSE_KEYS);
-					}
-                }
-            }
-        }
-/*
-		switch (get_highest_layer(layer_state))
+		const uint8_t current_layer = get_highest_layer(layer_state);
+		//static uint8_t old_layer =  -1;
+		
+		//if (old_layer != current_layer)
 		{
-		case _RAISE:
-			//rgb_matrix_sethsv(HSV_BLUE);
-			//rgb_matrix_set_color_all(RGB_BLUE);
-			break;
-		case _NUM:
-			//rgb_matrix_sethsv(HSV_RED);	
-			//rgb_matrix_set_color_all(RGB_RED);
-			break;
-		case _QWERTY:
-			//rgb_matrix_set_color_all(RGB_GREEN);
-			//rgb_matrix_sethsv(HSV_GREEN);
-	//		rgb_matrix_set_color_all(RGB_GREEN);
-			break;
-		case _ADJUST:
-			//rgb_matrix_sethsv(HSV_PURPLE);
-			//rgb_matrix_set_color_all(RGB_PURPLE);
-			break;
-		default: //  for any other layers, or the default layer
-			//rgb_matrix_sethsv(HSV_TURQUOISE);
-			//rgb_matrix_set_color_all(RGB_TURQUOISE);
-			break;
+			//old_layer = current_layer;
+			//rgb_matrix_set_suspend_state(false);
+			
+			for (uint8_t row = 0; row < MATRIX_ROWS; ++row)
+			{
+				for (uint8_t col = 0; col < MATRIX_COLS; ++col)
+				{
+					uint8_t index = g_led_config.matrix_co[row][col];
+
+					if (index >= 0 
+					 && index < RGB_MATRIX_LED_COUNT 
+					 && index != NO_LED)
+					{
+						const uint16_t keycode = keymap_key_to_keycode(current_layer, (keypos_t){col,row});
+
+						switch(keycode)
+						{
+							case KC_LSFT:	case KC_RSFT:
+							case KC_LCTL:	case KC_RCTL:
+							case KC_LALT:	case KC_RALT:
+							case OSM(MOD_LALT): case OSM(MOD_LGUI): case OSM(MOD_LSFT): case OSM(MOD_LCTL): case OSM(MOD_RALT):						
+								rgb_matrix_set_color(index, RGB_COMBINATION_KEYS);
+								break;
+							
+							case KC_ENT: case KC_BSPC: case KC_SPC: case KC_TAB:						
+							case KC_ESC:
+								rgb_matrix_set_color(index, RGB_ALPHAMOD_KEYS);
+								break;	
+							
+							case KC_COMM: case KC_DOT: case KC_QUOT:
+								rgb_matrix_set_color(index, RGB_NONALPHA_KEYS);
+								break;	
+
+							case KC_LEFT:	case KC_RIGHT:		case KC_UP:		case KC_DOWN:	
+								rgb_matrix_set_color(index, RGB_ARROW_KEYS);
+								break;
+
+							case KC_F1:		case KC_F2:		case KC_F3:
+							case KC_F4:		case KC_F5:		case KC_F6:
+							case KC_F7:		case KC_F8: 	case KC_F9:	
+							case KC_F10:	case KC_F11: 	case KC_F12:							
+								rgb_matrix_set_color(index, RGB_FUNCTION_KEYS);
+								break;								
+
+							case KC_LCBR:	case KC_RCBR:						// {}							
+							case KC_LPRN:	case KC_RPRN:						// ()							
+							case KC_LBRC:	case KC_RBRC:						// ()							
+							case KC_LT:		case KC_GT:							// <>	
+							case KC_SLSH:	case KC_BSLS:	case KC_KP_SLASH:	//					
+								rgb_matrix_set_color(index, RGB_PROGRAMMING_KEYS);
+								break;	
+
+							case KC_CIRC:	case KC_AMPR:	case KC_PIPE:			// ^&|
+							case KC_KP_PLUS:case KC_KP_MINUS: case KC_KP_ASTERISK:	// + - *
+							case KC_EQUAL:											// =						
+								rgb_matrix_set_color(index, RGB_MATH_KEYS);
+								break;	
+
+							case KC_KP_1:	case KC_KP_2:	case KC_KP_3:
+							case KC_KP_4:	case KC_KP_5:	case KC_KP_6:
+							case KC_KP_7:	case KC_KP_8:	case KC_KP_9:
+							case KC_KP_0:
+								rgb_matrix_set_color(index, RGB_NUMBER_KEYS);
+								break;
+
+							case LCTL(KC_X): case LCTL(KC_C): case LCTL(KC_V):
+								rgb_matrix_set_color(index, RGB_CUTCOPYPASTE_KEYS);
+								break;
+								
+							case LCTL(KC_Z): case LCTL(KC_Y):
+								rgb_matrix_set_color(index, RGB_UNDOREDO_KEYS);
+								break;
+								
+							case XXXXXXX:
+								rgb_matrix_set_color(index, RGB_BLACK);
+								break;
+								
+							case SYMBOL: case NUM: case EXT: case ADJUST:
+								rgb_matrix_set_color(index, RGB_WHITE);
+								break;
+							
+							default:
+							    if(rgb_matrix_get_mode() == 1) 
+									rgb_matrix_set_color(index, RGB_ANYTHINGELSE_KEYS);
+						}
+					}
+				}
+			}
 		}
-		*/
+		//else
+		{
+			//rgb_matrix_set_suspend_state(true);
+		}
 	}
 	
 	//static uint8_t rrr=0;
@@ -513,53 +487,64 @@ void bb_draw_radio_button(const uint8_t type, const uint8_t x, const uint8_t y, 
 	}
 }
 
-void bb_draw_frame(void)
+bool bb_draw_frame(void)
 {
-	bb_clear();
-	
 	const uint8_t current_layer = get_highest_layer(layer_state);
-	bb_draw_radio_button(2, 2 + 6 * 0, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 0);
-	bb_draw_radio_button(2, 2 + 6 * 1, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 1);
-	bb_draw_radio_button(2, 2 + 6 * 2, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 2);
-	bb_draw_radio_button(2, 2 + 6 * 3, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 3);
-	bb_draw_radio_button(2, 2 + 6 * 4, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 4);
-		
-	if(current_layer == _ADJUST)
-	{
-		// RGB layer
-		const uint8_t hue = rgblight_get_hue();
-		const uint8_t sat = rgblight_get_sat();
-		const uint8_t val = rgblight_get_val();
-		const uint8_t speed = rgb_matrix_get_speed();
-		
-		const uint8_t txt_spce = 10;
-		const uint8_t bar_spce = 6;
-		
-		float values[4] = { speed, val, sat, hue };
-		const char strings[] = "Hue\0Sat\0Val\0Spd\0";
-		for(int i = 0; i < 4; i++) 
-		{
-			//const uint16_t y = (OLED_DISPLAY_WIDTH - 1) - (txt_spce + bar_spce) * i;
-			bb_draw_progress_bar(2, 1, (OLED_DISPLAY_WIDTH - 1) - 2 - (txt_spce + bar_spce) * i, 30, floor((values[i] / 255.0f) * 30.0f));
-			//oled_set_cursor((i+8) * 6, 0);
-			oled_set_cursor(1/*43 + i * 11*/, 8 + i * 2);
-			//oled_set_cursor(16,16);
-			oled_write(&strings[i*4], false);
-		}
-		
-		oled_set_cursor(0, 7);	
-		char rgb_mode[]=" 0/44\0";
-		const uint8_t rgb_matrix_mode = rgb_matrix_get_mode();
-		rgb_mode[1] = '0' + (rgb_matrix_mode % 10);
-		if(rgb_matrix_mode > 9)
-		{
-			rgb_mode[0] = '0' + (rgb_matrix_mode / 10);
-		}
-		//rgb_matrix_get_mode()		
-		oled_write(rgb_mode, false);
-	}
 	
-	bb_copy_to_oled();
+	static uint8_t old_layer =  -1;
+	if (old_layer != current_layer || current_layer == _ADJUST)
+	{
+		old_layer = current_layer;
+
+		oled_clear();
+		
+		bb_clear();
+
+		bb_draw_radio_button(2, 2 + 6 * 0, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 0);
+		bb_draw_radio_button(2, 2 + 6 * 1, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 1);
+		bb_draw_radio_button(2, 2 + 6 * 2, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 2);
+		bb_draw_radio_button(2, 2 + 6 * 3, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 3);
+		bb_draw_radio_button(2, 2 + 6 * 4, 6/*OLED_DISPLAY_WIDTH - 1*/, current_layer == 4);
+			
+		if(current_layer == _ADJUST)
+		{
+			// RGB layer
+			const uint8_t hue = rgblight_get_hue();
+			const uint8_t sat = rgblight_get_sat();
+			const uint8_t val = rgblight_get_val();
+			const uint8_t speed = rgb_matrix_get_speed();
+			
+			const uint8_t txt_spce = 10;
+			const uint8_t bar_spce = 6;
+			
+			float values[4] = { speed, val, sat, hue };
+			const char strings[] = "Hue\0Sat\0Val\0Spd\0";
+			for(int i = 0; i < 4; i++) 
+			{
+				//const uint16_t y = (OLED_DISPLAY_WIDTH - 1) - (txt_spce + bar_spce) * i;
+				bb_draw_progress_bar(2, 1, (OLED_DISPLAY_WIDTH - 1) - 2 - (txt_spce + bar_spce) * i, 30, floor((values[i] / 255.0f) * 30.0f));
+				//oled_set_cursor((i+8) * 6, 0);
+				oled_set_cursor(1/*43 + i * 11*/, 8 + i * 2);
+				//oled_set_cursor(16,16);
+				oled_write(&strings[i*4], false);
+			}
+			
+			oled_set_cursor(0, 7);	
+			char rgb_mode[]=" 0/44\0";
+			const uint8_t rgb_matrix_mode = rgb_matrix_get_mode();
+			rgb_mode[1] = '0' + (rgb_matrix_mode % 10);
+			if(rgb_matrix_mode > 9)
+			{
+				rgb_mode[0] = '0' + (rgb_matrix_mode / 10);
+			}
+			//rgb_matrix_get_mode()		
+			oled_write(rgb_mode, false);
+		}
+		
+		bb_copy_to_oled();
+		return false;
+	}
+	return true;
 }
 
 //--------------------
@@ -571,7 +556,8 @@ void keyboard_post_init_kb(void) {
 	oled_clear();
 		
     rgb_matrix_enable_noeeprom();
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    //rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+	rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
 	rgb_matrix_set_color_all(RGB_BLACK);
 	//rgb_matrix_sethsv_noeeprom(HSV_OFF);
 	//rgb_matrix_sethsv(0, 0, 255);
@@ -584,7 +570,7 @@ oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
 
 //is_keyboard_master()
 //#    define SHOW_LOGO 5000
-bool oled_task_user(void) {
+bool oled_task_kb(void) {
 	//update_rgb_matrix_layer_color();
 	//if (is_keyboard_master()) 
 	//{
@@ -592,10 +578,7 @@ bool oled_task_user(void) {
 		//    render_logo();
 		//}else{
 		  //clear_screen();
-	oled_clear();
 
-	bb_draw_frame();
-	
-    return false;
+    return bb_draw_frame();
 }
 #endif
