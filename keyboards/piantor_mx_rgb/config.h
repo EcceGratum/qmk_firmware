@@ -33,7 +33,7 @@
 
 #define RGBLIGHT_DEFAULT_ON true // Enable RGB lighting by default
 #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT // Set default mode to static light
-#define RGB_MATRIX_TIMEOUT 300000 // number of milliseconds to wait until rgb automatically turns off
+//#define RGB_MATRIX_TIMEOUT 300000 // number of milliseconds to wait until rgb automatically turns off
 #define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
 
 #define SERIAL_USART_DRIVER SD0
@@ -46,7 +46,7 @@
 	#define SERIAL_USART_RX_PIN GP12
 	#define WS2812_DI_PIN GP27
 #else
-	#define SERIAL_USART_TX_PIN GP16
+	#define SERIAL_USART_TX_PIN GP22
 	#define SERIAL_USART_RX_PIN GP17
 	#define WS2812_DI_PIN GP6
 #endif
